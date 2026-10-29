@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 10 CS - Telecommunication and Computer Network | दूरसञ्चार तथा कम्प्युटर नेटवर्क</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Mukta (for Nepali readability) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Mukta:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        nepal: {
+                            blue: '#003893',
+                            crimson: '#DC143C'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Mukta', 'sans-serif'],
+                        nepali: ['Mukta', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', 'Mukta', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism elements */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(51, 65, 85, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+
+        /* Signal Pulse Animations */
+        @keyframes pulse-signal {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 8px #6366f1); }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .animate-signal {
+            animation: pulse-signal 2s infinite ease-in-out;
+        }
+
+        /* Packet Animation */
+        @keyframes movePacket {
+            0% { offset-distance: 0%; }
+            100% { offset-distance: 100%; }
+        }
+
+        /* Language Toggle Visibility Classes */
+        .lang-en, .lang-np { display: block; }
+        body.mode-en .lang-np { display: none !important; }
+        body.mode-np .lang-en { display: none !important; }
+        body.mode-both .lang-en, body.mode-both .lang-np { display: block !important; }
+
+        /* Print Style Adjustments */
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .glass-panel, .glass-card { background: white !important; color: black !important; border: 1px solid #ccc !important; }
+        }
+    </style>
+</head>
+<body class="mode-both min-h-screen flex flex-col justify-between select-none">
+
+    <!-- Header Navigation Bar -->
+    <header class="glass-panel sticky top-0 z-50 px-4 py-3 border-b border-slate-700/50 shadow-lg no-print">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-3">
+            <!-- Title & Subtitle -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-network-wired text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-indigo-200">
+                        Class 10 Computer Science: <span class="text-indigo-400">Telecommunication & Networks</span>
+                    </h1>
+                    <p class="text-xs text-indigo-300/80 font-nepali">कक्षा १० कम्प्युटर विज्ञान: दूरसञ्चार तथा कम्प्युटर नेटवर्क</p>
+                </div>
+            </div>
+
+            <!-- Controls: Timer, Language Toggle, Teacher Mode, Fullscreen -->
+            <div class="flex items-center flex-wrap gap-2 text-xs sm:text-sm">
+                <!-- Class Timer -->
+                <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-2 text-slate-300" title="Suggested 45-Min Class Duration">
+                    <i class="fa-regular fa-clock text-indigo-400 animate-pulse"></i>
+                    <span id="class-timer" class="font-mono font-semibold">45:00</span>
+                    <button onclick="toggleTimer()" id="timer-btn" class="hover:text-white transition"><i class="fa-solid fa-pause text-xs"></i></button>
+                </div>
+
+                <!-- Language Selector Toggle -->
+                <div class="bg-slate-800/90 border border-slate-700 p-0.5 rounded-lg flex items-center shadow-inner">
+                    <button onclick="setLanguage('en')" id="btn-lang-en" class="px-2.5 py-1 rounded-md text-xs font-semibold transition hover:text-white">EN</button>
+                    <button onclick="setLanguage('np')" id="btn-lang-np" class="px-2.5 py-1 rounded-md text-xs font-semibold transition hover:text-white font-nepali">नेपाली</button>
+                    <button onclick="setLanguage('both')" id="btn-lang-both" class="px-2.5 py-1 rounded-md text-xs font-semibold transition bg-indigo-600 text-white shadow">Bilingual</button>
+                </div>
+
+                <!-- Teacher Mode Button -->
+                <button onclick="toggleTeacherModal()" class="bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 font-medium">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <span class="hidden sm:inline">Teacher Mode / शिक्षक मोड</span>
+                </button>
+
+                <!-- Fullscreen Toggle -->
+                <button onclick="toggleFullscreen()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-lg border border-slate-700 transition" title="Toggle Fullscreen">
+                    <i class="fa-solid fa-expand" id="fullscreen-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-800/80 h-1.5 mt-2.5 rounded-full overflow-hidden border border-slate-700/50">
+            <div id="lesson-progress" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full w-0 transition-all duration-500"></div>
+        </div>
+    </header>
+
+    <!-- Main Container Layout -->
+    <main class="max-w-7xl mx-auto w-full px-4 py-4 flex-grow flex flex-col">
+        
+        <!-- Quick Nav Tab Strip -->
+        <nav class="flex items-center gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none text-xs font-medium no-print">
+            <button onclick="goToSlide(0)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="0">
+                <i class="fa-solid fa-bullseye text-indigo-400"></i> Objectives
+            </button>
+            <button onclick="goToSlide(1)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="1">
+                <i class="fa-solid fa-house"></i> 1. Introduction
+            </button>
+            <button onclick="goToSlide(2)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="2">
+                <i class="fa-solid fa-tower-cell"></i> 2. Telecommunication
+            </button>
+            <button onclick="goToSlide(3)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="3">
+                <i class="fa-solid fa-paper-plane"></i> 3. Data Communication
+            </button>
+            <button onclick="goToSlide(4)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="4">
+                <i class="fa-solid fa-plug"></i> 4. Media
+            </button>
+            <button onclick="goToSlide(5)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="5">
+                <i class="fa-solid fa-laptop-code"></i> 5. Computer Network
+            </button>
+            <button onclick="goToSlide(6)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="6">
+                <i class="fa-solid fa-globe"></i> 6. Types (LAN/WAN)
+            </button>
+            <button onclick="goToSlide(7)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="7">
+                <i class="fa-solid fa-microchip"></i> 7. Devices
+            </button>
+            <button onclick="goToSlide(8)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="8">
+                <i class="fa-solid fa-sitemap"></i> 8. Topologies
+            </button>
+            <button onclick="goToSlide(9)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="9">
+                <i class="fa-solid fa-server"></i> 9. Architecture
+            </button>
+            <button onclick="goToSlide(10)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="10">
+                <i class="fa-solid fa-cloud"></i> 10. Internet/Intranet
+            </button>
+            <button onclick="goToSlide(11)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="11">
+                <i class="fa-solid fa-shield-halved"></i> 11. Protocols
+            </button>
+            <button onclick="goToSlide(12)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="12">
+                <i class="fa-solid fa-scale-balanced"></i> 12. Pros & Cons
+            </button>
+            <button onclick="goToSlide(13)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="13">
+                <i class="fa-solid fa-brain"></i> 13. Mindmap Summary
+            </button>
+            <button onclick="goToSlide(14)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="14">
+                <i class="fa-solid fa-list-check"></i> Interactive Quiz
+            </button>
+            <button onclick="goToSlide(15)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="15">
+                <i class="fa-solid fa-file-pen"></i> Q&A Model Bank
+            </button>
+            <button onclick="goToSlide(16)" class="nav-tab shrink-0 px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:bg-indigo-600 hover:text-white transition flex items-center gap-1.5 border border-slate-700/60" data-slide="16">
+                <i class="fa-solid fa-rotate text-yellow-400"></i> Revision Suite
+            </button>
+        </nav>
+
+        <!-- Dynamic Slide Container -->
+        <div id="slides-wrapper" class="flex-grow flex flex-col relative">
+
+            <!-- SLIDE 0: LEARNING OBJECTIVES -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 shadow-2xl" id="slide-0">
+                <div class="border-b border-slate-700 pb-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Classroom Orientation</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Learning Objectives / सिकाइ उपलब्धिहरू</h2>
+                    </div>
+                    <div class="p-3 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-indigo-400">
+                        <i class="fa-solid fa-graduation-cap text-3xl"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm sm:text-base">
+                    <div class="glass-card p-4 rounded-xl border-l-4 border-l-indigo-500 space-y-2">
+                        <p class="lang-en font-medium text-indigo-200">By the end of this lesson, students will be able to:</p>
+                        <p class="lang-np font-medium text-indigo-300 font-nepali">यो पाठको अन्त्यमा, विद्यार्थीहरू निम्न कुराहरूमा सक्षम हुनेछन्:</p>
+                        <ul class="space-y-2 text-slate-300 list-disc list-inside">
+                            <li><span class="lang-en">Define telecommunication and computer networks clearly.</span><span class="lang-np font-nepali">दूरसञ्चार र कम्प्युटर नेटवर्कको स्पष्ट परिभाषा दिन।</span></li>
+                            <li><span class="lang-en">Identify the 5 key components of data communication.</span><span class="lang-np font-nepali">डाटा सञ्चारका ५ प्रमुख तत्वहरू पहिचान गर्न।</span></li>
+                            <li><span class="lang-en">Differentiate between Guided and Unguided transmission media.</span><span class="lang-np font-nepali">तारयुक्त (Guided) र ताररहित (Unguided) माध्यम बीच फरक छुट्याउन।</span></li>
+                            <li><span class="lang-en">Explain network types: PAN, LAN, MAN, and WAN.</span><span class="lang-np font-nepali">नेटवर्कका प्रकारहरू (PAN, LAN, MAN, WAN) को व्याख्या गर्न।</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-xl border-l-4 border-l-purple-500 space-y-2">
+                        <p class="lang-en font-medium text-purple-200">Core Technical Competencies:</p>
+                        <p class="lang-np font-medium text-purple-300 font-nepali">मुख्य प्राविधिक क्षमताहरू:</p>
+                        <ul class="space-y-2 text-slate-300 list-disc list-inside">
+                            <li><span class="lang-en">Understand network devices (NIC, Hub, Switch, Router, Modem).</span><span class="lang-np font-nepali">नेटवर्क उपकरणहरू (NIC, Hub, Switch, Router, Modem) को कार्य बुझ्न।</span></li>
+                            <li><span class="lang-en">Analyze Topologies (Bus, Star, Ring, Mesh, Tree).</span><span class="lang-np font-nepali">नेटवर्क टोपोलोजीहरू (Bus, Star, Ring, Mesh, Tree) को विश्लेषण गर्न।</span></li>
+                            <li><span class="lang-en">Differentiate Client-Server and Peer-to-Peer structures.</span><span class="lang-np font-nepali">क्लाइन्ट-सर्भर र पियर-टु-पियर ढाँचा बीच तुलना गर्न।</span></li>
+                            <li><span class="lang-en">Evaluate Internet, Intranet, Extranet & safety advantages.</span><span class="lang-np font-nepali">इन्टरनेट, इन्ट्रानेट र एक्स्ट्रानेटको उपयोगिता बुझ्न।</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Start Lesson Callout -->
+                <div class="p-4 bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl border border-indigo-500/30 flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-play text-2xl text-indigo-400 animate-bounce"></i>
+                        <div>
+                            <p class="lang-en font-semibold text-white">Ready to start the interactive session?</p>
+                            <p class="lang-np text-sm text-indigo-200 font-nepali">के तपाईं डिजिटल सिकाइ सत्र सुरु गर्न तयार हुनुहुन्छ?</p>
+                        </div>
+                    </div>
+                    <button onclick="goToSlide(1)" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl shadow-lg transition transform hover:scale-105">
+                        <span class="lang-en">Start Lesson 1 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                        <span class="lang-np font-nepali">पाठ १ सुरु गर्नुहोस् <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- SLIDE 1: INTRODUCTION -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-1">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 1 of 13</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">1. Introduction / परिचय</h2>
+                    </div>
+                    <i class="fa-solid fa-globe text-3xl text-indigo-400"></i>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4 text-slate-200 text-sm sm:text-base">
+                        <div class="glass-card p-4 rounded-xl space-y-2">
+                            <h3 class="text-lg font-bold text-indigo-300 flex items-center gap-2">
+                                <i class="fa-solid fa-lightbulb text-yellow-400"></i>
+                                Real-Life Context in Nepal
+                            </h3>
+                            <p class="lang-en leading-relaxed">
+                                Imagine sending a photo over <strong class="text-indigo-400">Viber or WhatsApp</strong> from Kathmandu to Pokhara, taking an online class via <strong class="text-indigo-400">Zoom</strong>, or paying for snacks using <strong class="text-indigo-400">eSewa / Fonepay</strong>. All these daily activities rely on <strong class="text-indigo-300">Telecommunication & Computer Networks</strong>!
+                            </p>
+                            <p class="lang-np font-nepali leading-relaxed text-slate-300">
+                                काठमाडौंबाट पोखरामा <strong class="text-indigo-300">Viber वा WhatsApp</strong> मार्फत फोटो पठाउने, <strong class="text-indigo-300">Zoom</strong> बाट अनलाइन कक्षा लिने वा <strong class="text-indigo-300">eSewa/Fonepay</strong> मार्फत भुक्तानी गर्ने कार्य सम्झनुहोस्। यी सबै दैनिक कार्यहरू <strong class="text-indigo-300">दूरसञ्चार र कम्प्युटर नेटवर्क</strong> मा नै आधारित छन्!
+                            </p>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl space-y-2 border-l-4 border-l-emerald-500">
+                            <h4 class="font-bold text-emerald-300">Why study this unit? / यो एकाइ किन पढ्ने?</h4>
+                            <p class="lang-en text-xs sm:text-sm text-slate-300">
+                                Modern Nepal relies on connected systems for education, banking (Nepal Rastra Bank RTGS), government services (Nagarik App), and tele-medicine in remote hilly districts.
+                            </p>
+                            <p class="lang-np text-xs sm:text-sm text-slate-300 font-nepali">
+                                आधुनिक नेपाल शिक्षा, बैंकिङ, नागरिक एप र दूरदराजका जिल्लाहरूमा टेलि-मेडिसिनका लागि जोडिएका नेटवर्क प्रविधिमा निर्भर छ।
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Visual Graphic Card -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center space-y-4 border border-indigo-500/20 bg-gradient-to-br from-slate-900 to-indigo-950/40">
+                        <div class="relative w-48 h-48 flex items-center justify-center">
+                            <div class="absolute inset-0 rounded-full border-2 border-indigo-500/30 animate-ping"></div>
+                            <div class="w-36 h-36 rounded-full bg-indigo-600/20 border-2 border-indigo-400 flex items-center justify-center text-indigo-300 text-5xl shadow-inner">
+                                <i class="fa-solid fa-tower-broadcast animate-signal"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-slate-800 px-2 py-1 rounded text-xs border border-slate-600"><i class="fa-solid fa-mobile-screen text-indigo-400"></i> Mobile</div>
+                            <div class="absolute bottom-2 right-2 bg-slate-800 px-2 py-1 rounded text-xs border border-slate-600"><i class="fa-solid fa-laptop text-indigo-400"></i> Laptop</div>
+                            <div class="absolute top-2 right-2 bg-slate-800 px-2 py-1 rounded text-xs border border-slate-600"><i class="fa-solid fa-wifi text-emerald-400"></i> Wi-Fi</div>
+                        </div>
+                        <p class="text-xs text-slate-400 italic">Interconnected Nepal: Bridging distance with digital signals.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: TELECOMMUNICATION -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-2">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 2 of 13</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">2. Telecommunication / दूरसञ्चार</h2>
+                    </div>
+                    <i class="fa-solid fa-tower-cell text-3xl text-purple-400"></i>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-5 rounded-xl space-y-4 border-l-4 border-l-indigo-500">
+                        <div>
+                            <span class="bg-indigo-500/20 text-indigo-300 text-xs px-2 py-1 rounded font-bold uppercase">Etymology / उत्पत्ति</span>
+                            <h3 class="text-lg font-bold text-white mt-1">Tele + Communication</h3>
+                        </div>
+                        <p class="lang-en text-slate-200 text-sm leading-relaxed">
+                            Derived from the Greek word <strong>'Tele'</strong> (meaning distant or far off) and Latin <strong>'Communicare'</strong> (to share). It is the exchange of information over significant distances by electronic or electromagnetic means.
+                        </p>
+                        <p class="lang-np font-nepali text-slate-300 text-sm leading-relaxed">
+                            ग्रीक शब्द <strong>'Tele'</strong> (जसको अर्थ टाढा हुन्छ) र ल्याटिन शब्द <strong>'Communicare'</strong> (साझेदारी गर्नु) बाट बनेको हो। इलेक्ट्रोनिक वा इलेक्ट्रोम्याग्नेटिक माध्यमबाट टाढा-टाढा सूचना आदानप्रदान गर्ने प्रविधिलाई दूरसञ्चार भनिन्छ।
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-xl space-y-3">
+                        <h3 class="font-bold text-indigo-300 text-sm uppercase tracking-wider">Examples in Everyday Life / प्रमुख उदाहरणहरू</h3>
+                        <div class="grid grid-cols-2 gap-3 text-xs sm:text-sm">
+                            <div class="p-3 bg-slate-800/80 rounded-lg border border-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-phone-volume text-indigo-400 text-lg"></i>
+                                <div>
+                                    <div class="font-bold text-white">Telephone & Cell</div>
+                                    <div class="text-slate-400 font-nepali text-xs">टेलिफोन र मोबाइल</div>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-slate-800/80 rounded-lg border border-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-radio text-purple-400 text-lg"></i>
+                                <div>
+                                    <div class="font-bold text-white">Radio & TV Broadcast</div>
+                                    <div class="text-slate-400 font-nepali text-xs">रेडियो र टेलिभिजन</div>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-slate-800/80 rounded-lg border border-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-satellite text-emerald-400 text-lg"></i>
+                                <div>
+                                    <div class="font-bold text-white">Satellite Networks</div>
+                                    <div class="text-slate-400 font-nepali text-xs">स्याटेलाइट सञ्चार</div>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-slate-800/80 rounded-lg border border-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-wifi text-amber-400 text-lg"></i>
+                                <div>
+                                    <div class="font-bold text-white">Internet Data</div>
+                                    <div class="text-slate-400 font-nepali text-xs">इन्टरनेट डाटा</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: DATA COMMUNICATION SYSTEM + INTERACTIVE SIMULATION A -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-3">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 3 of 13 &bull; Interactive Simulation A</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">3. Data Communication System / डाटा सञ्चार प्रणाली</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full text-xs font-bold">Interactive Lab</span>
+                </div>
+
+                <!-- 5 Components Explanation Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs text-center">
+                    <div class="p-3 bg-slate-800/90 border border-slate-700 rounded-xl hover:border-indigo-500 cursor-pointer transition" onclick="highlightSimComponent('sender')">
+                        <i class="fa-solid fa-laptop text-indigo-400 text-xl mb-1"></i>
+                        <div class="font-bold text-white">1. Sender</div>
+                        <div class="text-slate-400 font-nepali">प्रेषक</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/90 border border-slate-700 rounded-xl hover:border-purple-500 cursor-pointer transition" onclick="highlightSimComponent('receiver')">
+                        <i class="fa-solid fa-desktop text-purple-400 text-xl mb-1"></i>
+                        <div class="font-bold text-white">2. Receiver</div>
+                        <div class="text-slate-400 font-nepali">प्राप्तकर्ता</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/90 border border-slate-700 rounded-xl hover:border-yellow-500 cursor-pointer transition" onclick="highlightSimComponent('message')">
+                        <i class="fa-solid fa-envelope text-yellow-400 text-xl mb-1"></i>
+                        <div class="font-bold text-white">3. Message</div>
+                        <div class="text-slate-400 font-nepali">सन्देश</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/90 border border-slate-700 rounded-xl hover:border-emerald-500 cursor-pointer transition" onclick="highlightSimComponent('medium')">
+                        <i class="fa-solid fa-route text-emerald-400 text-xl mb-1"></i>
+                        <div class="font-bold text-white">4. Medium</div>
+                        <div class="text-slate-400 font-nepali">सञ्चार माध्यम</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/90 border border-slate-700 rounded-xl hover:border-pink-500 cursor-pointer transition col-span-2 sm:col-span-1" onclick="highlightSimComponent('protocol')">
+                        <i class="fa-solid fa-scroll text-pink-400 text-xl mb-1"></i>
+                        <div class="font-bold text-white">5. Protocol</div>
+                        <div class="text-slate-400 font-nepali">सञ्चार नियमावली</div>
+                    </div>
+                </div>
+
+                <!-- SIMULATION A CANVAS & CONTROLS -->
+                <div class="glass-card p-4 rounded-xl border border-indigo-500/30 space-y-4">
+                    <div class="flex flex-wrap justify-between items-center gap-3 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs font-semibold text-slate-300">Medium Type:</label>
+                            <select id="sim-medium-type" class="bg-slate-800 text-xs border border-slate-700 rounded px-2 py-1 text-white font-medium" onchange="resetDataSim()">
+                                <option value="wired">Wired (Guided Cable)</option>
+                                <option value="wireless">Wireless (Unguided Wave)</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="startDataSim()" id="btn-start-datacomm" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-play"></i> Start Simulation
+                            </button>
+                            <button onclick="resetDataSim()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-xs font-bold transition">
+                                <i class="fa-solid fa-rotate-left"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Simulation Graphical Stage -->
+                    <div class="relative w-full h-44 bg-slate-950 rounded-xl border border-slate-800 overflow-hidden flex items-center justify-between px-6 sm:px-12" id="sim-stage">
+                        <!-- Protocol Header Rule Bar -->
+                        <div id="sim-comp-protocol" class="absolute top-2 left-1/2 -translate-x-1/2 bg-pink-950/80 border border-pink-500/50 text-pink-200 text-[10px] px-3 py-1 rounded-full flex items-center gap-1 shadow-lg z-10 transition">
+                            <i class="fa-solid fa-scroll"></i> Protocol (TCP/IP Rules Active)
+                        </div>
+
+                        <!-- Sender Node -->
+                        <div id="sim-comp-sender" class="flex flex-col items-center gap-1 z-10 p-2 rounded-lg transition">
+                            <div class="w-14 h-14 bg-indigo-900/80 border-2 border-indigo-400 rounded-xl flex items-center justify-center text-indigo-300 text-2xl shadow-lg">
+                                <i class="fa-solid fa-laptop"></i>
+                            </div>
+                            <span class="text-xs font-bold text-indigo-300">Sender</span>
+                            <span class="text-[10px] text-slate-400 font-nepali">प्रेषक</span>
+                        </div>
+
+                        <!-- Channel Wire / Wireless Wave Line -->
+                        <div id="sim-comp-medium" class="flex-grow mx-4 relative h-12 flex items-center justify-center transition">
+                            <!-- Wired Cable Representation -->
+                            <div id="sim-cable-line" class="w-full h-2 bg-slate-700 rounded-full overflow-hidden border border-slate-600">
+                                <div id="sim-cable-glow" class="h-full bg-gradient-to-r from-indigo-500 via-emerald-400 to-purple-500 w-0 transition-all duration-300"></div>
+                            </div>
+                            <!-- Wireless Wave Overlay -->
+                            <div id="sim-wave-line" class="hidden text-emerald-400 text-xs tracking-widest animate-pulse font-mono">
+                                ~ ~ ~ wireless signal ~ ~ ~
+                            </div>
+                            
+                            <!-- Moving Packet Asset -->
+                            <div id="sim-packet" class="absolute left-0 bg-yellow-400 text-slate-950 px-2 py-1 rounded-lg text-xs font-black shadow-lg shadow-yellow-400/50 flex items-center gap-1 opacity-0 transition-all">
+                                <i class="fa-solid fa-envelope"></i> Data
+                            </div>
+                        </div>
+
+                        <!-- Receiver Node -->
+                        <div id="sim-comp-receiver" class="flex flex-col items-center gap-1 z-10 p-2 rounded-lg transition">
+                            <div class="w-14 h-14 bg-purple-900/80 border-2 border-purple-400 rounded-xl flex items-center justify-center text-purple-300 text-2xl shadow-lg">
+                                <i class="fa-solid fa-desktop"></i>
+                            </div>
+                            <span class="text-xs font-bold text-purple-300">Receiver</span>
+                            <span class="text-[10px] text-slate-400 font-nepali">प्राप्तकर्ता</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Component Description Box -->
+                    <div id="sim-info-box" class="p-3 bg-slate-900/80 rounded-lg text-xs text-slate-300 border border-slate-800">
+                        <span class="text-indigo-400 font-bold">Instruction:</span> Click "Start Simulation" or tap any of the 5 component cards above to highlight its function.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: TRANSMISSION MEDIA -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-4">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 4 of 13</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">4. Transmission Media / प्रसारण माध्यम</h2>
+                    </div>
+                    <i class="fa-solid fa-plug text-3xl text-emerald-400"></i>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Guided Media -->
+                    <div class="glass-card p-5 rounded-xl space-y-4 border-t-4 border-t-indigo-500">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-indigo-300">Guided Media (Wired / तारयुक्त)</h3>
+                            <i class="fa-solid fa-network-wired text-indigo-400"></i>
+                        </div>
+                        <p class="lang-en text-xs text-slate-300">Physical solid cables that carry data signals along a contained path.</p>
+                        <p class="lang-np font-nepali text-xs text-slate-300">भौतिक तारहरू जसले निश्चित मार्गबाट डाटा सङ्केतहरू लैजान्छन्।</p>
+
+                        <div class="space-y-3 text-xs">
+                            <div class="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                <div class="font-bold text-white flex justify-between">
+                                    <span>Twisted-Pair Cable (UTP/STP)</span>
+                                    <span class="text-indigo-400">RJ-45</span>
+                                </div>
+                                <p class="text-slate-400 mt-1">Used in LANs & landline telephones. Inexpensive, easy to install.</p>
+                            </div>
+                            <div class="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                <div class="font-bold text-white flex justify-between">
+                                    <span>Coaxial Cable</span>
+                                    <span class="text-indigo-400">BNC</span>
+                                </div>
+                                <p class="text-slate-400 mt-1">Used in Cable TV networks in Nepal. Good shielding against interference.</p>
+                            </div>
+                            <div class="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700 bg-gradient-to-r from-slate-800 to-indigo-950/40">
+                                <div class="font-bold text-emerald-300 flex justify-between">
+                                    <span>Fiber Optic Cable (फाइबर अप्टिक)</span>
+                                    <span class="text-emerald-400">Light Signals</span>
+                                </div>
+                                <p class="text-slate-400 mt-1">Uses total internal reflection of light. Highest speed (FTTH internet in Nepal like WorldLink, NT Fiber).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unguided Media -->
+                    <div class="glass-card p-5 rounded-xl space-y-4 border-t-4 border-t-purple-500">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-purple-300">Unguided Media (Wireless / ताररहित)</h3>
+                            <i class="fa-solid fa-wifi text-purple-400"></i>
+                        </div>
+                        <p class="lang-en text-xs text-slate-300">Electromagnetic waves transmitted through air, space, or water.</p>
+                        <p class="lang-np font-nepali text-xs text-slate-300">हावा वा अन्तरिक्ष मार्फत प्रसारण हुने इलेक्ट्रोम्याग्नेटिक तरङ्गहरू।</p>
+
+                        <div class="space-y-3 text-xs">
+                            <div class="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                <div class="font-bold text-white">Radio Waves</div>
+                                <p class="text-slate-400 mt-1">Omnidirectional (FM radio, Wi-Fi, 4G/5G mobile networks).</p>
+                            </div>
+                            <div class="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                <div class="font-bold text-white">Microwaves</div>
+                                <p class="text-slate-400 mt-1">Line-of-sight propagation (dish antennas on mobile towers).</p>
+                            </div>
+                            <div class="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                <div class="font-bold text-white">Infrared & Satellite</div>
+                                <p class="text-slate-400 mt-1">Infrared for TV remotes; Satellites for long-distance global broadcasts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: COMPUTER NETWORK -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-5">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 5 of 13</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">5. Computer Network / कम्प्युटर नेटवर्क</h2>
+                    </div>
+                    <i class="fa-solid fa-laptop-code text-3xl text-indigo-400"></i>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="glass-card p-5 rounded-xl border-l-4 border-l-indigo-500 space-y-2">
+                            <h3 class="font-bold text-indigo-300 text-base">Formal Definition / परिभाषा</h3>
+                            <p class="lang-en text-sm text-slate-200 leading-relaxed">
+                                A <strong>computer network</strong> is an interconnected group of autonomous computers and computing devices connected via transmission media to share resources (files, printers) and communicate.
+                            </p>
+                            <p class="lang-np font-nepali text-sm text-slate-300 leading-relaxed">
+                                <strong>कम्प्युटर नेटवर्क</strong> भनेको आपसमा जोडिएका स्वतन्त्र कम्प्युटर र उपकरणहरूको समूह हो, जसले डाटा, सूचना तथा स्रोतहरू (जस्तै: प्रिन्टर, इन्टरनेट) साझा गर्न सक्छन्।
+                            </p>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl space-y-2 text-xs sm:text-sm">
+                            <h4 class="font-bold text-purple-300">Key Benefits / मुख्य फाइदाहरू:</h4>
+                            <ul class="list-disc list-inside space-y-1 text-slate-300">
+                                <li>Hardware Sharing (One printer for whole lab)</li>
+                                <li>Software & File Sharing</li>
+                                <li>Centralized Data Storage & Backup</li>
+                                <li>Instant Communication (Email, Chat)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Animated Computer Lab Graphic -->
+                    <div class="glass-card p-4 rounded-xl bg-slate-950 flex flex-col items-center justify-center border border-slate-800 min-h-[220px]">
+                        <div class="text-xs text-indigo-400 font-bold mb-3">Simulated School Computer Lab</div>
+                        <div class="grid grid-cols-3 gap-4 w-full max-w-xs text-center text-xs">
+                            <div class="p-2 bg-slate-800 rounded-lg border border-slate-700">
+                                <i class="fa-solid fa-desktop text-indigo-400 text-lg"></i>
+                                <div class="text-[10px] text-slate-300 mt-1">PC-1</div>
+                            </div>
+                            <div class="p-2 bg-slate-800 rounded-lg border border-slate-700">
+                                <i class="fa-solid fa-print text-emerald-400 text-lg"></i>
+                                <div class="text-[10px] text-emerald-300 mt-1">Shared Printer</div>
+                            </div>
+                            <div class="p-2 bg-slate-800 rounded-lg border border-slate-700">
+                                <i class="fa-solid fa-desktop text-indigo-400 text-lg"></i>
+                                <div class="text-[10px] text-slate-300 mt-1">PC-2</div>
+                            </div>
+                        </div>
+                        <div class="w-full h-1 bg-indigo-500/50 my-3 relative">
+                            <div class="absolute -top-1 left-1/2 -translate-x-1/2 bg-indigo-600 px-2 text-[9px] rounded-full text-white">Central Switch</div>
+                        </div>
+                        <p class="text-[11px] text-slate-400 text-center">Both PC-1 and PC-2 can print documents over the local network.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: TYPES OF NETWORKS + INTERACTIVE EXPLORER D -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-6">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 6 of 13 &bull; Interactive Explorer</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">6. Types of Networks / नेटवर्कका प्रकारहरू</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 rounded-full text-xs font-bold">Geographical Scope</span>
+                </div>
+
+                <!-- Network Types Buttons -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <button onclick="showNetType('pan')" id="btn-net-pan" class="net-type-btn p-3 bg-indigo-600 text-white rounded-xl text-center shadow transition font-bold text-xs sm:text-sm">
+                        PAN (Personal Area)
+                    </button>
+                    <button onclick="showNetType('lan')" id="btn-net-lan" class="net-type-btn p-3 bg-slate-800 text-slate-300 rounded-xl text-center transition hover:bg-slate-700 font-bold text-xs sm:text-sm">
+                        LAN (Local Area)
+                    </button>
+                    <button onclick="showNetType('man')" id="btn-net-man" class="net-type-btn p-3 bg-slate-800 text-slate-300 rounded-xl text-center transition hover:bg-slate-700 font-bold text-xs sm:text-sm">
+                        MAN (Metropolitan)
+                    </button>
+                    <button onclick="showNetType('wan')" id="btn-net-wan" class="net-type-btn p-3 bg-slate-800 text-slate-300 rounded-xl text-center transition hover:bg-slate-700 font-bold text-xs sm:text-sm">
+                        WAN (Wide Area)
+                    </button>
+                </div>
+
+                <!-- Dynamic Network Type Info Display Box -->
+                <div id="net-type-display" class="glass-card p-6 rounded-xl border border-indigo-500/30 space-y-4">
+                    <!-- JS renders PAN by default -->
+                </div>
+            </section>
+
+            <!-- SLIDE 7: NETWORK DEVICES + INTERACTIVE SIMULATION B -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-7">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 7 of 13 &bull; Interactive Lab B</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">7. Network Devices / नेटवर्क उपकरणहरू</h2>
+                    </div>
+                    <i class="fa-solid fa-microchip text-3xl text-purple-400"></i>
+                </div>
+
+                <!-- Devices Selector Strip -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs">
+                    <button onclick="inspectDevice('nic')" class="dev-btn px-3 py-2 bg-indigo-600 text-white rounded-lg shrink-0 font-bold">NIC</button>
+                    <button onclick="inspectDevice('hub')" class="dev-btn px-3 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 font-bold">Hub</button>
+                    <button onclick="inspectDevice('switch')" class="dev-btn px-3 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 font-bold">Switch</button>
+                    <button onclick="inspectDevice('router')" class="dev-btn px-3 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 font-bold">Router</button>
+                    <button onclick="inspectDevice('modem')" class="dev-btn px-3 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 font-bold">Modem</button>
+                    <button onclick="inspectDevice('repeater')" class="dev-btn px-3 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 font-bold">Repeater</button>
+                    <button onclick="inspectDevice('ap')" class="dev-btn px-3 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 font-bold">Access Point</button>
+                </div>
+
+                <!-- Device Detail Card -->
+                <div id="device-detail-card" class="glass-card p-6 rounded-xl border border-indigo-500/30">
+                    <!-- Populated by JS inspectDevice() -->
+                </div>
+            </section>
+
+            <!-- SLIDE 8: NETWORK TOPOLOGIES + INTERACTIVE SIMULATION C -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-8">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 8 of 13 &bull; Interactive Topology Studio</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">8. Network Topologies / नेटवर्क टोपोलोजीहरू</h2>
+                    </div>
+                    <i class="fa-solid fa-sitemap text-3xl text-emerald-400"></i>
+                </div>
+
+                <!-- Topology Switcher -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs font-bold">
+                    <button onclick="renderTopology('bus')" class="topo-btn px-4 py-2 bg-indigo-600 text-white rounded-lg">Bus Topology</button>
+                    <button onclick="renderTopology('star')" class="topo-btn px-4 py-2 bg-slate-800 text-slate-300 rounded-lg">Star Topology</button>
+                    <button onclick="renderTopology('ring')" class="topo-btn px-4 py-2 bg-slate-800 text-slate-300 rounded-lg">Ring Topology</button>
+                    <button onclick="renderTopology('mesh')" class="topo-btn px-4 py-2 bg-slate-800 text-slate-300 rounded-lg">Mesh Topology</button>
+                    <button onclick="renderTopology('tree')" class="topo-btn px-4 py-2 bg-slate-800 text-slate-300 rounded-lg">Tree Topology</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Interactive SVG Topology Viewport -->
+                    <div class="glass-card p-4 rounded-xl bg-slate-950 flex flex-col items-center justify-center relative min-h-[260px] border border-slate-800 overflow-hidden" id="topo-svg-container">
+                        <!-- Rendered via JS -->
+                    </div>
+
+                    <!-- Topology Details -->
+                    <div id="topo-info-card" class="glass-card p-5 rounded-xl space-y-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: NETWORK ARCHITECTURE -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-9">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 9 of 13</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">9. Network Architecture / नेटवर्क संरचना</h2>
+                    </div>
+                    <i class="fa-solid fa-server text-3xl text-indigo-400"></i>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Client-Server -->
+                    <div class="glass-card p-5 rounded-xl space-y-3 border-t-4 border-t-indigo-500">
+                        <h3 class="text-lg font-bold text-indigo-300">1. Client-Server Architecture</h3>
+                        <p class="lang-en text-xs text-slate-300">
+                            A centralized system where powerful computers (Servers) store files and respond to requests from user workstations (Clients).
+                        </p>
+                        <p class="lang-np font-nepali text-xs text-slate-300">
+                            केन्द्रीकृत प्रणाली जहाँ शक्तिशाली कम्प्युटर (सर्भर) ले डाटा भण्डारण गर्छ र क्लाइन्ट कम्प्युटरको अनुरोध पूरा गर्छ।
+                        </p>
+                        <div class="p-3 bg-slate-950 rounded-lg text-xs space-y-1">
+                            <div class="text-emerald-400 font-bold">Advantages:</div>
+                            <div class="text-slate-400">&bull; Centralized backup & high security.</div>
+                            <div class="text-slate-400 font-nepali">&bull; केन्द्रीकृत ब्याकअप र उच्च सुरक्षा।</div>
+                        </div>
+                    </div>
+
+                    <!-- Peer-to-Peer -->
+                    <div class="glass-card p-5 rounded-xl space-y-3 border-t-4 border-t-purple-500">
+                        <h3 class="text-lg font-bold text-purple-300">2. Peer-to-Peer (P2P) Architecture</h3>
+                        <p class="lang-en text-xs text-slate-300">
+                            All computers on the network have equal capabilities and responsibilities. There is no dedicated central server.
+                        </p>
+                        <p class="lang-np font-nepali text-xs text-slate-300">
+                            सबै कम्प्युटरहरूको समान क्षमता र अधिकार हुन्छ। यहाँ कुनै छुट्टै मुख्य सर्भर हुँदैन।
+                        </p>
+                        <div class="p-3 bg-slate-950 rounded-lg text-xs space-y-1">
+                            <div class="text-indigo-400 font-bold">Advantages:</div>
+                            <div class="text-slate-400">&bull; Easy to setup, low cost for small homes/offices.</div>
+                            <div class="text-slate-400 font-nepali">&bull; साना घर/कार्यालयमा स्थापना गर्न सजिलो र कम खर्चिलो।</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: INTERNET, INTRANET & EXTRANET -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-10">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 10 of 13</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">10. Internet, Intranet & Extranet</h2>
+                    </div>
+                    <i class="fa-solid fa-cloud text-3xl text-purple-400"></i>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-indigo-950 text-indigo-200 border-b border-slate-700">
+                                <th class="p-3">Feature</th>
+                                <th class="p-3 text-emerald-400">Internet (इन्टरनेट)</th>
+                                <th class="p-3 text-indigo-400">Intranet (इन्ट्रानेट)</th>
+                                <th class="p-3 text-purple-400">Extranet (एक्स्ट्रानेट)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-slate-300">
+                            <tr>
+                                <td class="p-3 font-bold text-white">Access Level</td>
+                                <td class="p-3">Public global network</td>
+                                <td class="p-3">Private to organization employees</td>
+                                <td class="p-3">Private with trusted vendor/partner access</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-white">Example in Nepal</td>
+                                <td class="p-3">Browsing Wikipedia, Google</td>
+                                <td class="p-3">Internal portal of Nepal Bank Ltd.</td>
+                                <td class="p-3">Supplier portal of CG Group or Ncell</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-white">Security</td>
+                                <td class="p-3">Low / Public threat exposure</td>
+                                <td class="p-3">High security behind firewalls</td>
+                                <td class="p-3">Controlled authentication (VPNs)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SLIDE 11: PROTOCOLS -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-11">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 11 of 13</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">11. Network Protocols / सञ्चार नियमावली</h2>
+                    </div>
+                    <i class="fa-solid fa-shield-halved text-3xl text-emerald-400"></i>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                    <div class="glass-card p-4 rounded-xl border-t-2 border-t-indigo-500 space-y-2">
+                        <div class="font-bold text-base text-indigo-300">TCP/IP</div>
+                        <p class="text-slate-300">Transmission Control Protocol / Internet Protocol. The fundamental rules governing the global Internet.</p>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-xl border-t-2 border-t-purple-500 space-y-2">
+                        <div class="font-bold text-base text-purple-300">HTTP / HTTPS</div>
+                        <p class="text-slate-300">Hypertext Transfer Protocol (Secure). Used for fetching web pages securely with SSL encryption.</p>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-xl border-t-2 border-t-emerald-500 space-y-2">
+                        <div class="font-bold text-base text-emerald-300">FTP</div>
+                        <p class="text-slate-300">File Transfer Protocol. Specialized rules for uploading and downloading large files between devices.</p>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-xl border-t-2 border-t-yellow-500 space-y-2">
+                        <div class="font-bold text-base text-yellow-300">DNS</div>
+                        <p class="text-slate-300">Domain Name System. Translates human-friendly names (e.g., google.com) into IP addresses (142.250.x.x).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: ADVANTAGES & DISADVANTAGES -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-12">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 12 of 13</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">12. Advantages & Disadvantages / फाइदा तथा बेफाइदाहरू</h2>
+                    </div>
+                    <i class="fa-solid fa-scale-balanced text-3xl text-yellow-400"></i>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
+                    <div class="glass-card p-5 rounded-xl border-l-4 border-l-emerald-500 space-y-3">
+                        <h3 class="font-bold text-emerald-300 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-thumbs-up"></i> Advantages (फाइदाहरू)
+                        </h3>
+                        <ul class="space-y-2 text-slate-300 list-disc list-inside">
+                            <li><strong>Resource Sharing:</strong> Share expensive printers, scanners & storage.</li>
+                            <li><strong>Fast Communication:</strong> Instant emails, voice calls & videoconferencing.</li>
+                            <li><strong>Centralized Data:</strong> Data saved centrally for easier backups.</li>
+                            <li><strong>Cost Efficiency:</strong> Reduces paper, printing, and hardware expenses.</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-xl border-l-4 border-l-rose-500 space-y-3">
+                        <h3 class="font-bold text-rose-300 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Disadvantages (बेफाइदाहरू)
+                        </h3>
+                        <ul class="space-y-2 text-slate-300 list-disc list-inside">
+                            <li><strong>Security Risks:</strong> Viruses, malware, and hacking threats.</li>
+                            <li><strong>Server Dependency:</strong> Main server failure halts whole network.</li>
+                            <li><strong>Setup Cost:</strong> High initial investment for cables, switches, routers.</li>
+                            <li><strong>Maintenance:</strong> Requires skilled network administrators.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 13: MINDMAP SUMMARY -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-13">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Slide 13 of 13 &bull; Revision Map</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">13. Summary Mind Map / पुनरावृत्ति</h2>
+                    </div>
+                    <i class="fa-solid fa-brain text-3xl text-purple-400"></i>
+                </div>
+
+                <div class="glass-card p-6 rounded-xl space-y-4 bg-slate-950/60 border border-indigo-500/30 text-xs">
+                    <div class="text-center font-bold text-indigo-300 text-base mb-4">Unit Summary At A Glance</div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                            <div class="font-bold text-emerald-400 text-sm">Transmission Media</div>
+                            <div class="text-slate-300">&bull; Guided (Twisted Pair, Coaxial, Fiber)</div>
+                            <div class="text-slate-300">&bull; Unguided (Radio, Microwave, Infrared)</div>
+                        </div>
+
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                            <div class="font-bold text-indigo-400 text-sm">Network Types & Topologies</div>
+                            <div class="text-slate-300">&bull; Scope: PAN, LAN, MAN, WAN</div>
+                            <div class="text-slate-300">&bull; Shape: Bus, Star, Ring, Mesh, Tree</div>
+                        </div>
+
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                            <div class="font-bold text-purple-400 text-sm">Hardware & Rules</div>
+                            <div class="text-slate-300">&bull; Hardware: NIC, Switch, Router, Modem</div>
+                            <div class="text-slate-300">&bull; Protocols: TCP/IP, HTTP, FTP, DNS</div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 text-center">
+                        <button onclick="goToSlide(14)" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition transform hover:scale-105">
+                            Proceed to Interactive Quiz / क्विजतर्फ जानुहोस् <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 14: INTERACTIVE QUIZ & ASSESSMENT SYSTEM -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-14">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between flex-wrap gap-2">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Interactive Evaluation</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Interactive Assessment / वस्तुगत प्रश्नोत्तरी</h2>
+                    </div>
+                    <div id="quiz-score-badge" class="px-4 py-1.5 bg-slate-800 border border-indigo-500/40 rounded-xl text-indigo-300 font-mono font-bold text-sm">
+                        Score: 0 / 10
+                    </div>
+                </div>
+
+                <!-- Quiz Category Switcher -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs font-bold">
+                    <button onclick="loadQuizCategory('mcq')" class="quiz-cat-btn px-3.5 py-2 bg-indigo-600 text-white rounded-lg">MCQs (15)</button>
+                    <button onclick="loadQuizCategory('tf')" class="quiz-cat-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg">True / False (10)</button>
+                    <button onclick="loadQuizCategory('blanks')" class="quiz-cat-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg">Fill-in Blanks (5)</button>
+                    <button onclick="loadQuizCategory('match')" class="quiz-cat-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg">Matching (5)</button>
+                </div>
+
+                <!-- Active Question Container -->
+                <div id="quiz-question-box" class="glass-card p-6 rounded-xl space-y-4 border border-indigo-500/30">
+                    <!-- Loaded dynamically via JavaScript -->
+                </div>
+            </section>
+
+            <!-- SLIDE 15: MODEL QUESTION BANK (SHORT & LONG ANSWERS) -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-15">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Exam Preparation</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Model Answer Bank / विषयगत प्रश्नोत्तर</h2>
+                    </div>
+                    <div class="flex gap-2 text-xs font-bold">
+                        <button onclick="toggleQType('short')" id="btn-qtype-short" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg">Short Q&A (15)</button>
+                        <button onclick="toggleQType('long')" id="btn-qtype-long" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg">Long Q&A (10)</button>
+                    </div>
+                </div>
+
+                <div id="qbank-container" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                    <!-- Rendered dynamically by JavaScript -->
+                </div>
+            </section>
+
+            <!-- SLIDE 16: STUDENT REVISION SUITE & FLASHCARDS -->
+            <section class="slide-content glass-panel rounded-2xl p-6 sm:p-8 flex-grow space-y-6 hidden" id="slide-16">
+                <div class="border-b border-slate-700 pb-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Smart Revision</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Interactive Flashcards & Glossary</h2>
+                    </div>
+                    <button onclick="window.print()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                        <i class="fa-solid fa-print"></i> Print Summary
+                    </button>
+                </div>
+
+                <!-- Flashcard Widget -->
+                <div class="max-w-md mx-auto my-4 cursor-pointer" onclick="flipFlashcard()">
+                    <div id="flashcard" class="glass-card p-8 rounded-2xl border-2 border-indigo-500/50 text-center min-h-[180px] flex flex-col justify-center items-center shadow-2xl transition transform duration-500 hover:scale-105">
+                        <span class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold mb-2">Tap Card to Flip</span>
+                        <div id="flashcard-term" class="text-xl font-black text-white">Twisted Pair Cable</div>
+                        <div id="flashcard-def" class="text-xs text-indigo-200 mt-3 hidden">
+                            Cable consisting of pairs of insulated copper wires twisted together to reduce crosstalk. Common in LANs.
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-3 text-xs">
+                        <button onclick="event.stopPropagation(); prevFlashcard();" class="text-indigo-400 hover:underline"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+                        <span id="flashcard-count" class="text-slate-400">Card 1 / 10</span>
+                        <button onclick="event.stopPropagation(); nextFlashcard();" class="text-indigo-400 hover:underline">Next <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Slide Footer Controls -->
+        <footer class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center text-xs font-medium no-print">
+            <button onclick="prevSlide()" id="btn-prev-slide" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Previous
+            </button>
+
+            <div id="slide-indicator" class="text-slate-400 font-mono">
+                Slide 1 / 13
+            </div>
+
+            <button onclick="nextSlide()" id="btn-next-slide" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg transition flex items-center gap-2">
+                Next <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </footer>
+    </main>
+
+    <!-- TEACHER MODE MODAL -->
+    <div id="teacher-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel max-w-2xl w-full rounded-2xl p-6 border border-purple-500/40 space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <div class="flex items-center gap-2 text-purple-300">
+                    <i class="fa-solid fa-chalkboard-user text-xl"></i>
+                    <h3 class="font-bold text-lg text-white">Teacher Panel / शिक्षक मोड (45 Min Plan)</h3>
+                </div>
+                <button onclick="toggleTeacherModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="space-y-3 text-xs text-slate-300">
+                <div class="p-3 bg-purple-950/40 rounded-xl border border-purple-500/30">
+                    <h4 class="font-bold text-purple-200 mb-1">Recommended 45-Minute Lesson Timing Plan:</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>00-03 Min:</strong> Intro & Learning Objectives announcement.</li>
+                        <li><strong>03-10 Min:</strong> Telecommunication & 5 Data Comm components (Run Simulation A).</li>
+                        <li><strong>10-18 Min:</strong> Transmission media (Guided vs Unguided comparison).</li>
+                        <li><strong>18-30 Min:</strong> Network Types (PAN/LAN/MAN/WAN) & Topologies SVG demo.</li>
+                        <li><strong>30-38 Min:</strong> Interactive Quiz & Formative assessment.</li>
+                        <li><strong>38-45 Min:</strong> Q&A, Homework assignment & Lesson wrap-up.</li>
+                    </ul>
+                </div>
+
+                <div class="p-3 bg-slate-900 rounded-xl space-y-1">
+                    <h4 class="font-bold text-indigo-300">Common Misconceptions to Clarify:</h4>
+                    <p>&bull; <strong>Hub vs Switch:</strong> Clarify that a Hub broadcasts data to all ports (insecure), while a Switch forwards data specifically to the destination MAC address.</p>
+                    <p>&bull; <strong>Modem vs Router:</strong> A Modem modulates/demodulates ISP signals, while a Router directs data traffic between separate networks.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        // --- GLOBAL APP STATE ---
+        let currentSlide = 0;
+        const totalSlides = 17; // Slide 0 to 16
+        let timerSeconds = 45 * 60;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // --- LANGUAGE ENGINE ---
+        function setLanguage(mode) {
+            document.body.classList.remove('mode-en', 'mode-np', 'mode-both');
+            document.body.classList.add('mode-' + mode);
+            
+            document.querySelectorAll('#btn-lang-en, #btn-lang-np, #btn-lang-both').forEach(b => {
+                b.classList.remove('bg-indigo-600', 'text-white', 'shadow');
+                b.classList.add('text-slate-300');
+            });
+            const activeBtn = document.getElementById('btn-lang-' + mode);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
+                activeBtn.classList.remove('text-slate-300');
+            }
+        }
+
+        // --- SLIDE NAVIGATION ---
+        function updateSlideUI() {
+            // Hide all slides
+            document.querySelectorAll('.slide-content').forEach(s => s.classList.add('hidden'));
+            
+            // Show current slide
+            const activeSlideElem = document.getElementById(`slide-${currentSlide}`);
+            if (activeSlideElem) activeSlideElem.classList.remove('hidden');
+
+            // Update Progress Bar
+            const pct = (currentSlide / (totalSlides - 1)) * 100;
+            document.getElementById('lesson-progress').style.width = `${pct}%`;
+
+            // Update Slide Indicator Footer
+            const slideIndicator = document.getElementById('slide-indicator');
+            if (slideIndicator) {
+                slideIndicator.textContent = `Slide ${currentSlide} / ${totalSlides - 1}`;
+            }
+
+            // Update Nav Tabs Active Highlight
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                const sIdx = parseInt(tab.getAttribute('data-slide'));
+                if (sIdx === currentSlide) {
+                    tab.classList.add('bg-indigo-600', 'text-white');
+                    tab.classList.remove('bg-slate-800/90', 'text-slate-300');
+                } else {
+                    tab.classList.remove('bg-indigo-600', 'text-white');
+                    tab.classList.add('bg-slate-800/90', 'text-slate-300');
+                }
+            });
+
+            // Trigger dynamic renders if entering specific slides
+            if (currentSlide === 6) showNetType('pan');
+            if (currentSlide === 7) inspectDevice('nic');
+            if (currentSlide === 8) renderTopology('bus');
+            if (currentSlide === 14) loadQuizCategory('mcq');
+            if (currentSlide === 15) renderQBank();
+            if (currentSlide === 16) updateFlashcardUI();
+        }
+
+        function goToSlide(idx) {
+            if (idx >= 0 && idx < totalSlides) {
+                currentSlide = idx;
+                updateSlideUI();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideUI();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideUI();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Keyboard Navigation (Left / Right Arrow Keys)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // --- CLASSROOM TIMER ---
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds--;
+                        const mins = Math.floor(timerSeconds / 60);
+                        const secs = timerSeconds % 60;
+                        document.getElementById('class-timer').textContent = 
+                            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    } else {
+                        clearInterval(timerInterval);
+                    }
+                }, 1000);
+            }
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timer-btn');
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                btn.innerHTML = '<i class="fa-solid fa-play text-xs"></i>';
+            } else {
+                startTimer();
+                btn.innerHTML = '<i class="fa-solid fa-pause text-xs"></i>';
+            }
+        }
+
+        // Fullscreen Toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.getElementById('fullscreen-icon').classList.replace('fa-expand', 'fa-compress');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    document.getElementById('fullscreen-icon').classList.replace('fa-compress', 'fa-expand');
+                }
+            }
+        }
+
+        // Teacher Modal Toggle
+        function toggleTeacherModal() {
+            const modal = document.getElementById('teacher-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        // --- SIMULATION A: DATA COMMUNICATION LOGIC ---
+        let simCommInterval = null;
+
+        function startDataSim() {
+            resetDataSim();
+            const packet = document.getElementById('sim-packet');
+            const cableGlow = document.getElementById('sim-cable-glow');
+            const mediumType = document.getElementById('sim-medium-type').value;
+            const waveLine = document.getElementById('sim-wave-line');
+            const cableLine = document.getElementById('sim-cable-line');
+
+            if (mediumType === 'wireless') {
+                cableLine.classList.add('hidden');
+                waveLine.classList.remove('hidden');
+            } else {
+                cableLine.classList.remove('hidden');
+                waveLine.classList.add('hidden');
+            }
+
+            packet.style.opacity = '1';
+            let pos = 0;
+            
+            simCommInterval = setInterval(() => {
+                if (pos <= 85) {
+                    pos += 2;
+                    packet.style.left = pos + '%';
+                    if (mediumType === 'wired') {
+                        cableGlow.style.width = pos + '%';
+                    }
+                } else {
+                    clearInterval(simCommInterval);
+                    document.getElementById('sim-info-box').innerHTML = `
+                        <span class="text-emerald-400 font-bold">Success!</span> Message successfully transmitted from Sender to Receiver following TCP/IP protocol rules.
+                    `;
+                }
+            }, 50);
+        }
+
+        function resetDataSim() {
+            if (simCommInterval) clearInterval(simCommInterval);
+            const packet = document.getElementById('sim-packet');
+            const cableGlow = document.getElementById('sim-cable-glow');
+            packet.style.opacity = '0';
+            packet.style.left = '0%';
+            cableGlow.style.width = '0%';
+            document.getElementById('sim-info-box').innerHTML = `
+                <span class="text-indigo-400 font-bold">Instruction:</span> Click "Start Simulation" to transmit a data packet.
+            `;
+        }
+
+        function highlightSimComponent(comp) {
+            const descriptions = {
+                sender: "<strong>Sender (प्रेषक):</strong> The device (laptop, computer, mobile) that originates and sends the data message.",
+                receiver: "<strong>Receiver (प्राप्तकर्ता):</strong> The target device that receives the transmitted message.",
+                message: "<strong>Message (सन्देश):</strong> The actual information/data being communicated (text, image, audio, video).",
+                medium: "<strong>Medium (सञ्चार माध्यम):</strong> The physical path or wireless frequency over which data travels.",
+                protocol: "<strong>Protocol (सञ्चार नियमावली):</strong> The set of syntax and timing rules governing communication."
+            };
+            document.getElementById('sim-info-box').innerHTML = descriptions[comp] || "";
+        }
+
+        // --- EXPLORER D: NETWORK TYPES LOGIC ---
+        const netTypeData = {
+            pan: {
+                title: "PAN (Personal Area Network)",
+                nepaliTitle: "व्यक्तिगत नेटवर्क (PAN)",
+                range: "Within 10 Meters (Single Person)",
+                devices: "Smartphones, Bluetooth Earbuds, Smartwatches, Laptops",
+                descEn: "A network organized around an individual person within a short distance (e.g., transferring photos via Bluetooth or AirDrop).",
+                descNp: "एउटा व्यक्तिको वरपर करिब १० मिटरको दायराभित्र रहेका उपकरणहरू (जस्तै ब्लुटुथ, एयरड्रप) बिचको नेटवर्क।",
+                bg: "from-indigo-900/50 to-slate-900"
+            },
+            lan: {
+                title: "LAN (Local Area Network)",
+                nepaliTitle: "स्थानीय नेटवर्क (LAN)",
+                range: "Single Room, Building, or School Campus (Up to 1 KM)",
+                devices: "School Computer Lab PCs, Office Switches, Wi-Fi Routers",
+                descEn: "Connects computers within a small geographical area like a school computer lab, home, or office building.",
+                descNp: "विद्यालयको प्रयोगशाला, घर वा कार्यालयको सानो क्षेत्रभित्रका कम्प्युटरहरू जोडिएको नेटवर्क।",
+                bg: "from-purple-900/50 to-slate-900"
+            },
+            man: {
+                title: "MAN (Metropolitan Area Network)",
+                nepaliTitle: "महानगर नेटवर्क (MAN)",
+                range: "Across an Entire City or Town (5 to 50 KM)",
+                devices: "Cable TV Networks, City-wide Bank ATMs, Fiber ISPs",
+                descEn: "Covers a larger geographic area than a LAN, such as an entire city (e.g., Cable TV network across Pokhara or Lalitpur).",
+                descNp: "एउटा सिङ्गो शहर वा महानगरभरि फैलिएको नेटवर्क (जस्तै काठमाडौं वा पोखराको केबल टेलिभिजन नेटवर्क)।",
+                bg: "from-emerald-900/50 to-slate-900"
+            },
+            wan: {
+                title: "WAN (Wide Area Network)",
+                nepaliTitle: "विस्तृत नेटवर्क (WAN)",
+                range: "Country, Continent, or Global (Thousands of KM)",
+                devices: "Submarine Fiber Cables, Communication Satellites, Routers",
+                descEn: "Spans large geographical distances across countries or continents. The Internet is the world's largest WAN.",
+                descNp: "देश, महादेश वा सम्पूर्ण विश्वभर फैलिएको विस्तृत नेटवर्क। इन्टरनेट यसको उत्कृष्ट उदाहरण हो।",
+                bg: "from-pink-900/50 to-slate-900"
+            }
+        };
+
+        function showNetType(type) {
+            document.querySelectorAll('.net-type-btn').forEach(b => {
+                b.classList.remove('bg-indigo-600', 'text-white');
+                b.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            const btn = document.getElementById('btn-net-' + type);
+            if (btn) {
+                btn.classList.add('bg-indigo-600', 'text-white');
+                btn.classList.remove('bg-slate-800', 'text-slate-300');
+            }
+
+            const data = netTypeData[type];
+            document.getElementById('net-type-display').innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">${data.title}</h3>
+                            <p class="text-xs text-indigo-300 font-nepali">${data.nepaliTitle}</p>
+                        </div>
+                        <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 rounded-full text-xs font-bold">${data.range}</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                        <div class="space-y-2">
+                            <p class="lang-en text-slate-200 leading-relaxed">${data.descEn}</p>
+                            <p class="lang-np font-nepali text-slate-300 leading-relaxed">${data.descNp}</p>
+                        </div>
+                        <div class="p-3 bg-slate-950 rounded-lg space-y-1 border border-slate-800">
+                            <div class="text-indigo-400 font-bold">Typical Devices:</div>
+                            <div class="text-slate-300">${data.devices}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- SIMULATION B: NETWORK DEVICES LOGIC ---
+        const deviceData = {
+            nic: {
+                name: "Network Interface Card (NIC)",
+                nepali: "नेटवर्क इन्टरफेस कार्ड",
+                icon: "fa-microchip",
+                functionEn: "A hardware adapter card installed in computers that connects them to a physical network cable or Wi-Fi. Every NIC has a unique 48-bit MAC address.",
+                functionNp: "कम्प्युटरभित्र जडान गरिने हार्डवेयर कार्ड जसले तार वा वाइफाइ मार्फत नेटवर्कमा जोड्छ। यसमा अद्वितीय MAC ठेगाना हुन्छ।"
+            },
+            hub: {
+                name: "Hub (हब)",
+                nepali: "हब (नेटवर्क ब्रोडकास्ट उपकरण)",
+                icon: "fa-cubes",
+                functionEn: "A non-intelligent multiport device that broadcasts all incoming data frames to ALL connected ports, causing network congestion.",
+                functionNp: "एउटा साधारण नेटवर्क उपकरण जसले प्राप्त भएको डाटालाई नेटवर्कका सबै कम्प्युटरहरूमा पठाउँछ (Broadcasting)।"
+            },
+            switch: {
+                name: "Switch (स्विच)",
+                nepali: "स्विच (बुद्धिमानी उपकरण)",
+                icon: "fa-network-wired",
+                functionEn: "An intelligent network device that filters and forwards data frames directly to the intended destination device using MAC addresses.",
+                functionNp: "एउटा बुद्धिमानी उपकरण जसले MAC ठेगानाको आधारमा सही प्राप्तकर्ता कम्प्युटरमा मात्र डाटा पठाउँछ।"
+            },
+            router: {
+                name: "Router (राउटर)",
+                nepali: "राउटर",
+                icon: "fa-route",
+                functionEn: "A smart network device that connects different networks together (e.g., connecting a school LAN to the global Internet) using IP addresses.",
+                functionNp: "फरक-फरक नेटवर्कहरू (जस्तै स्थानीय LAN र इन्टरनेट) लाई आपसमा जोड्ने र उपयुक्त मार्ग (Route) छनोट गर्ने उपकरण।"
+            },
+            modem: {
+                name: "Modem (MOdulator / DEModulator)",
+                nepali: "मोडेम",
+                icon: "fa-right-left",
+                functionEn: "Converts digital computer signals into analog ISP signals for transmission over telephone or fiber lines, and vice versa.",
+                functionNp: "डिजिटल कम्प्युटर सिग्नललाई एनालगमा (Modulation) र एनालग सिग्नललाई पुनः डिजिटलमा (Demodulation) रूपान्तरण गर्ने उपकरण।"
+            },
+            repeater: {
+                name: "Repeater (रिपिटर)",
+                nepali: "रिपिटर",
+                icon: "fa-bolt",
+                functionEn: "Regenerates and amplifies weak incoming signals to extend the transmission distance over long cables.",
+                functionNp: "लामो दुरीमा कमजोर भएका डाटा सिग्नलहरूलाई पुनः बलियो (Regenerate/Amplify) बनाएर अगाडि बढाउने उपकरण।"
+            },
+            ap: {
+                name: "Wireless Access Point (WAP)",
+                nepali: "वायरलेस एक्सेस पोइन्ट",
+                icon: "fa-wifi",
+                functionEn: "Allows wireless devices (smartphones, laptops) to connect to a wired network using Wi-Fi radio signals.",
+                functionNp: "मोबाइल वा ल्यापटप जस्ता ताररहित उपकरणहरूलाई वाइफाइ मार्फत तारयुक्त नेटवर्कमा जोड्ने उपकरण।"
+            }
+        };
+
+        function inspectDevice(devKey) {
+            const dev = deviceData[devKey];
+            document.getElementById('device-detail-card').innerHTML = `
+                <div class="flex items-start gap-4">
+                    <div class="w-16 h-16 rounded-xl bg-indigo-600/20 border border-indigo-400 flex items-center justify-center text-indigo-400 text-3xl shrink-0">
+                        <i class="fa-solid ${dev.icon}"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-xl font-bold text-white">${dev.name}</h3>
+                        <p class="text-xs text-indigo-300 font-nepali">${dev.nepali}</p>
+                        <p class="lang-en text-xs text-slate-300 leading-relaxed">${dev.functionEn}</p>
+                        <p class="lang-np font-nepali text-xs text-slate-300 leading-relaxed">${dev.functionNp}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- SIMULATION C: NETWORK TOPOLOGY SVG RENDERER LOGIC ---
+        const topoData = {
+            bus: {
+                name: "Bus Topology",
+                nepali: "बस टोपोलोजी",
+                pros: "Easy to install, requires minimal cable.",
+                cons: "Main backbone cable failure collapses entire network.",
+                svg: `
+                    <svg viewBox="0 0 300 120" class="w-full h-full">
+                        <line x1="20" y1="60" x2="280" y2="60" stroke="#6366f1" stroke-width="4"/>
+                        <circle cx="20" cy="60" r="5" fill="#f59e0b"/>
+                        <circle cx="280" cy="60" r="5" fill="#f59e0b"/>
+                        
+                        <line x1="60" y1="60" x2="60" y2="30" stroke="#94a3b8" stroke-width="2"/>
+                        <rect x="45" y="10" width="30" height="20" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        
+                        <line x1="150" y1="60" x2="150" y2="30" stroke="#94a3b8" stroke-width="2"/>
+                        <rect x="135" y="10" width="30" height="20" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        
+                        <line x1="240" y1="60" x2="240" y2="30" stroke="#94a3b8" stroke-width="2"/>
+                        <rect x="225" y="10" width="30" height="20" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                    </svg>
+                `
+            },
+            star: {
+                name: "Star Topology",
+                nepali: "स्टार टोपोलोजी",
+                pros: "Easy to add new nodes, single PC failure doesn't affect others.",
+                cons: "Central Switch/Hub failure brings down whole network.",
+                svg: `
+                    <svg viewBox="0 0 300 140" class="w-full h-full">
+                        <circle cx="150" cy="70" r="15" fill="#6366f1" stroke="#a5b4fc" stroke-width="2"/>
+                        <line x1="150" y1="70" x2="70" y2="30" stroke="#64748b" stroke-width="2"/>
+                        <rect x="50" y="15" width="25" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <line x1="150" y1="70" x2="230" y2="30" stroke="#64748b" stroke-width="2"/>
+                        <rect x="225" y="15" width="25" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <line x1="150" y1="70" x2="70" y2="110" stroke="#64748b" stroke-width="2"/>
+                        <rect x="50" y="100" width="25" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <line x1="150" y1="70" x2="230" y2="110" stroke="#64748b" stroke-width="2"/>
+                        <rect x="225" y="100" width="25" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                    </svg>
+                `
+            },
+            ring: {
+                name: "Ring Topology",
+                nepali: "रिङ टोपोलोजी",
+                pros: "Token passing prevents data packet collision.",
+                cons: "A break in the ring breaks complete communication.",
+                svg: `
+                    <svg viewBox="0 0 300 140" class="w-full h-full">
+                        <circle cx="150" cy="70" r="45" fill="none" stroke="#6366f1" stroke-width="3"/>
+                        <rect x="138" y="15" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <rect x="185" y="60" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <rect x="138" y="105" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <rect x="90" y="60" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                    </svg>
+                `
+            },
+            mesh: {
+                name: "Mesh Topology",
+                nepali: "मेस टोपोलोजी",
+                pros: "Highest fault tolerance, dedicated point-to-point links.",
+                cons: "Very expensive due to heavy cabling redundancy.",
+                svg: `
+                    <svg viewBox="0 0 300 140" class="w-full h-full">
+                        <line x1="80" y1="30" x2="220" y2="30" stroke="#6366f1" stroke-width="1.5"/>
+                        <line x1="80" y1="30" x2="220" y2="110" stroke="#6366f1" stroke-width="1.5"/>
+                        <line x1="80" y1="30" x2="80" y2="110" stroke="#6366f1" stroke-width="1.5"/>
+                        <line x1="220" y1="30" x2="80" y2="110" stroke="#6366f1" stroke-width="1.5"/>
+                        <line x1="220" y1="30" x2="220" y2="110" stroke="#6366f1" stroke-width="1.5"/>
+                        <line x1="80" y1="110" x2="220" y2="110" stroke="#6366f1" stroke-width="1.5"/>
+                        
+                        <rect x="68" y="20" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <rect x="208" y="20" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <rect x="68" y="100" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <rect x="208" y="100" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                    </svg>
+                `
+            },
+            tree: {
+                name: "Tree Topology",
+                nepali: "ट्री टोपोलोजी",
+                pros: "Hierarchical structure, easy to manage large networks.",
+                cons: "Root node failure collapses subordinate branches.",
+                svg: `
+                    <svg viewBox="0 0 300 140" class="w-full h-full">
+                        <rect x="138" y="10" width="24" height="18" rx="3" fill="#6366f1" stroke="#a5b4fc"/>
+                        <line x1="150" y1="28" x2="90" y2="60" stroke="#64748b" stroke-width="2"/>
+                        <line x1="150" y1="28" x2="210" y2="60" stroke="#64748b" stroke-width="2"/>
+                        <rect x="78" y="55" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <rect x="198" y="55" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <line x1="90" y1="73" x2="50" y2="110" stroke="#64748b" stroke-width="2"/>
+                        <line x1="90" y1="73" x2="110" y2="110" stroke="#64748b" stroke-width="2"/>
+                        <rect x="38" y="105" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                        <rect x="98" y="105" width="24" height="18" rx="3" fill="#1e293b" stroke="#38bdf8"/>
+                    </svg>
+                `
+            }
+        };
+
+        function renderTopology(tKey) {
+            const data = topoData[tKey];
+            document.getElementById('topo-svg-container').innerHTML = data.svg;
+            document.getElementById('topo-info-card').innerHTML = `
+                <h3 class="text-xl font-bold text-white">${data.name}</h3>
+                <p class="text-xs text-indigo-300 font-nepali">${data.nepali}</p>
+                <div class="space-y-2 text-xs">
+                    <div class="p-2.5 bg-emerald-950/40 border border-emerald-500/30 rounded-lg text-emerald-300">
+                        <strong>Advantage:</strong> ${data.pros}
+                    </div>
+                    <div class="p-2.5 bg-rose-950/40 border border-rose-500/30 rounded-lg text-rose-300">
+                        <strong>Disadvantage:</strong> ${data.cons}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- QUIZ & ASSESSMENT SYSTEM LOGIC ---
+        const quizBank = {
+            mcq: [
+                {
+                    qEn: "Which component of data communication converts data signals for transmission?",
+                    qNp: "डाटा सञ्चार प्रणालीको कुन तत्वले डाटा सिग्नललाई रूपान्तरण गर्दछ?",
+                    opts: ["Sender", "Transmission Medium", "Protocol", "Message"],
+                    ans: 1,
+                    exp: "Transmission medium (cable/wireless wave) carries the converted signals between sender and receiver."
+                },
+                {
+                    qEn: "Which guided media transmits data using light signals?",
+                    qNp: "प्रकाशको माध्यमबाट डाटा प्रसारण गर्ने तारयुक्त माध्यम कुन हो?",
+                    opts: ["Twisted Pair Cable", "Coaxial Cable", "Optical Fibre Cable", "Shielded Pair"],
+                    ans: 2,
+                    exp: "Optical fibre cables use total internal reflection of light for ultra-fast data transfer."
+                },
+                {
+                    qEn: "What is the global network of interconnected computer networks called?",
+                    qNp: "आपसमा जोडिएका कम्प्युटर नेटवर्कहरूको विश्वव्यापी सञ्जाललाई के भनिन्छ?",
+                    opts: ["Intranet", "LAN", "Internet", "Extranet"],
+                    ans: 2,
+                    exp: "The Internet is a public worldwide WAN connecting millions of devices."
+                }
+            ],
+            tf: [
+                {
+                    qEn: "A Hub forwards data intelligently based on destination MAC addresses.",
+                    qNp: "हब (Hub) ले प्राप्तकर्ताको MAC ठेगानाको आधारमा बुद्धिमानीपूर्वक डाटा पठाउँछ।",
+                    ans: false,
+                    exp: "False. A Hub is a non-intelligent device that broadcasts data to ALL ports. A Switch uses MAC addresses."
+                },
+                {
+                    qEn: "WAN covers a larger geographical area than LAN.",
+                    qNp: "WAN ले LAN भन्दा ठूलो भौगोलिक क्षेत्र समेट्छ।",
+                    ans: true,
+                    exp: "True. WAN covers countries and continents, whereas LAN is limited to a single room or building."
+                }
+            ]
+        };
+
+        let currentQuizScore = 0;
+
+        function loadQuizCategory(cat) {
+            const container = document.getElementById('quiz-question-box');
+            if (cat === 'mcq') {
+                const list = quizBank.mcq;
+                let html = `<div class="space-y-6">`;
+                list.forEach((q, idx) => {
+                    html += `
+                        <div class="p-4 bg-slate-900 rounded-xl space-y-3 border border-slate-800">
+                            <div class="font-bold text-white text-sm">Q${idx + 1}. ${q.qEn}</div>
+                            <div class="font-nepali text-indigo-300 text-xs">${q.qNp}</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                ${q.opts.map((opt, oIdx) => `
+                                    <button onclick="checkMcqAnswer(${idx}, ${oIdx}, this)" class="p-2.5 bg-slate-800 hover:bg-indigo-600 rounded-lg text-left text-slate-300 transition border border-slate-700">
+                                        ${opt}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <div id="mcq-exp-${idx}" class="hidden p-2 bg-slate-950 rounded text-xs text-indigo-300 border border-indigo-500/30"></div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                container.innerHTML = html;
+            } else if (cat === 'tf') {
+                const list = quizBank.tf;
+                let html = `<div class="space-y-6">`;
+                list.forEach((q, idx) => {
+                    html += `
+                        <div class="p-4 bg-slate-900 rounded-xl space-y-3 border border-slate-800">
+                            <div class="font-bold text-white text-sm">Q${idx + 1}. ${q.qEn}</div>
+                            <div class="font-nepali text-indigo-300 text-xs">${q.qNp}</div>
+                            <div class="flex gap-3 text-xs">
+                                <button onclick="checkTfAnswer(${idx}, true, this)" class="px-5 py-2 bg-slate-800 hover:bg-emerald-600 text-white rounded-lg transition border border-slate-700 font-bold">True</button>
+                                <button onclick="checkTfAnswer(${idx}, false, this)" class="px-5 py-2 bg-slate-800 hover:bg-rose-600 text-white rounded-lg transition border border-slate-700 font-bold">False</button>
+                            </div>
+                            <div id="tf-exp-${idx}" class="hidden p-2 bg-slate-950 rounded text-xs text-indigo-300 border border-indigo-500/30"></div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = `<p class="text-slate-400 text-xs">More questions available in the downloadable printable section.</p>`;
+            }
+        }
+
+        function checkMcqAnswer(qIdx, selectedOpt, btn) {
+            const q = quizBank.mcq[qIdx];
+            const expBox = document.getElementById(`mcq-exp-${qIdx}`);
+            expBox.classList.remove('hidden');
+
+            if (selectedOpt === q.ans) {
+                btn.classList.replace('bg-slate-800', 'bg-emerald-600');
+                expBox.innerHTML = `<span class="text-emerald-400 font-bold">Correct!</span> ${q.exp}`;
+                currentQuizScore++;
+            } else {
+                btn.classList.replace('bg-slate-800', 'bg-rose-600');
+                expBox.innerHTML = `<span class="text-rose-400 font-bold">Incorrect.</span> Correct answer: <strong>${q.opts[q.ans]}</strong>. ${q.exp}`;
+            }
+            document.getElementById('quiz-score-badge').textContent = `Score: ${currentQuizScore} / 10`;
+        }
+
+        function checkTfAnswer(qIdx, selectedBool, btn) {
+            const q = quizBank.tf[qIdx];
+            const expBox = document.getElementById(`tf-exp-${qIdx}`);
+            expBox.classList.remove('hidden');
+
+            if (selectedBool === q.ans) {
+                btn.classList.replace('bg-slate-800', 'bg-emerald-600');
+                expBox.innerHTML = `<span class="text-emerald-400 font-bold">Correct!</span> ${q.exp}`;
+                currentQuizScore++;
+            } else {
+                btn.classList.replace('bg-slate-800', 'bg-rose-600');
+                expBox.innerHTML = `<span class="text-rose-400 font-bold">Incorrect.</span> ${q.exp}`;
+            }
+            document.getElementById('quiz-score-badge').textContent = `Score: ${currentQuizScore} / 10`;
+        }
+
+        // --- MODEL QUESTION BANK LOGIC ---
+        const qBankShort = [
+            {
+                qEn: "1. Define telecommunication.",
+                qNp: "१. दूरसञ्चार भनेको के हो?",
+                aEn: "Telecommunication is the exchange of information (voice, data, text, video) over long distances using electronic or electromagnetic signals.",
+                aNp: "इलेक्ट्रोनिक वा इलेक्ट्रोम्याग्नेटिक माध्यमबाट टाढा-टाढा सूचना (आवाज, डाटा, दृश्य) आदानप्रदान गर्ने प्रविधिलाई दूरसञ्चार भनिन्छ।"
+            },
+            {
+                qEn: "2. What is a computer network?",
+                qNp: "२. कम्प्युटर नेटवर्क भनेको के हो?",
+                aEn: "A computer network is an interconnected group of autonomous computers that can communicate and share hardware, software, and data resources.",
+                aNp: "आपसमा जोडिएका स्वतन्त्र कम्प्युटरहरूको समूह जसले डाटा, सूचना तथा स्रोतहरू साझेदारी गर्न सक्छन्, त्यसलाई कम्प्युटर नेटवर्क भनिन्छ।"
+            },
+            {
+                qEn: "3. Differentiate between Hub and Switch.",
+                qNp: "३. हब (Hub) र स्विच (Switch) बिच फरक लेख्नुहोस्।",
+                aEn: "A Hub broadcasts incoming data to all connected ports (non-intelligent), whereas a Switch forwards data specifically to the destination device using MAC addresses (intelligent).",
+                aNp: "हबले डाटा सबै पोर्टमा पठाउँछ (Broadcasting), तर स्विचले MAC ठेगानाको आधारमा सही कम्प्युटरमा मात्र डाटा पठाउँछ।"
+            }
+        ];
+
+        const qBankLong = [
+            {
+                qEn: "1. Explain the 5 basic components of a Data Communication System with a diagram.",
+                qNp: "१. डाटा सञ्चार प्रणालीका ५ वटा तत्वहरूको सचित्र वर्णन गर्नुहोस्।",
+                aEn: "A data communication system consists of: 1. Sender (device initiating message), 2. Receiver (target device), 3. Message (data being sent), 4. Medium (wired/wireless path), and 5. Protocol (set of communication rules).",
+                aNp: "डाटा सञ्चारका ५ प्रमुख तत्वहरू हुन्: १. प्रेषक (डाटा पठाउने), २. प्राप्तकर्ता (डाटा पाउने), ३. सन्देश (डाटा), ४. सञ्चार माध्यम (तार वा ताररहित), र ५. सञ्चार नियमावली (प्रोटोकल)।"
+            }
+        ];
+
+        let currentQType = 'short';
+
+        function toggleQType(type) {
+            currentQType = type;
+            document.getElementById('btn-qtype-short').className = type === 'short' ? 'px-3 py-1.5 bg-indigo-600 text-white rounded-lg' : 'px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg';
+            document.getElementById('btn-qtype-long').className = type === 'long' ? 'px-3 py-1.5 bg-indigo-600 text-white rounded-lg' : 'px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg';
+            renderQBank();
+        }
+
+        function renderQBank() {
+            const list = currentQType === 'short' ? qBankShort : qBankLong;
+            let html = '';
+            list.forEach((item) => {
+                html += `
+                    <div class="glass-card p-4 rounded-xl space-y-2 border border-slate-800">
+                        <div class="font-bold text-white text-sm">${item.qEn}</div>
+                        <div class="font-nepali text-indigo-300 text-xs">${item.qNp}</div>
+                        <div class="p-3 bg-slate-950 rounded-lg space-y-2 text-xs border border-slate-900">
+                            <p class="lang-en text-slate-300">${item.aEn}</p>
+                            <p class="lang-np font-nepali text-slate-400">${item.aNp}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('qbank-container').innerHTML = html;
+        }
+
+        // --- FLASHCARD REVISION LOGIC ---
+        const flashcardData = [
+            { term: "Twisted Pair Cable", def: "A guided medium consisting of insulated copper wires twisted in pairs (UTP/STP)." },
+            { term: "Optical Fiber Cable", def: "Transmits data using total internal reflection of light signals through glass fibers." },
+            { term: "Router", def: "Connects two or more different networks together based on IP addressing." },
+            { term: "Modem", def: "Converts digital signals to analog (modulation) and vice versa (demodulation)." },
+            { term: "Protocol", def: "A set of formal rules governing data communication across a network." }
+        ];
+
+        let currentFlashcardIdx = 0;
+        let isFlashcardFlipped = false;
+
+        function updateFlashcardUI() {
+            const item = flashcardData[currentFlashcardIdx];
+            document.getElementById('flashcard-term').textContent = item.term;
+            document.getElementById('flashcard-def').textContent = item.def;
+            document.getElementById('flashcard-count').textContent = `Card ${currentFlashcardIdx + 1} / ${flashcardData.length}`;
+            
+            document.getElementById('flashcard-term').classList.remove('hidden');
+            document.getElementById('flashcard-def').classList.add('hidden');
+            isFlashcardFlipped = false;
+        }
+
+        function flipFlashcard() {
+            isFlashcardFlipped = !isFlashcardFlipped;
+            if (isFlashcardFlipped) {
+                document.getElementById('flashcard-term').classList.add('hidden');
+                document.getElementById('flashcard-def').classList.remove('hidden');
+            } else {
+                document.getElementById('flashcard-term').classList.remove('hidden');
+                document.getElementById('flashcard-def').classList.add('hidden');
+            }
+        }
+
+        function nextFlashcard() {
+            currentFlashcardIdx = (currentFlashcardIdx + 1) % flashcardData.length;
+            updateFlashcardUI();
+        }
+
+        function prevFlashcard() {
+            currentFlashcardIdx = (currentFlashcardIdx - 1 + flashcardData.length) % flashcardData.length;
+            updateFlashcardUI();
+        }
+
+        // --- INITIALIZATION ON WINDOW LOAD ---
+        window.onload = function() {
+            updateSlideUI();
+            startTimer();
+        };
+    </script>
+</body>
+</html>
